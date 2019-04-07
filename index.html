@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Hello World!</title>
+  </head>
+  <body>
+    <h1>Hello World!</h1>
+    <!-- All of the Node.js APIs are available in this renderer process. -->
+    We are using Node.js <script>document.write(process.versions.node)</script>,
+    Chromium <script>document.write(process.versions.chrome)</script>,
+    and Electron <script>document.write(process.versions.electron)</script>.
+
+    <br>
+    <!-- this buton will trigger the connection with the mysql database -->
+    <input type="button" value="Connect to mysql" id="btn" />
+    <input type="button" value="Add" id="add" />
+    <input type="button" value="Delete" id="del" />
+
+    <script>
+      // You can also require other files to run in this process
+      require('./renderer.js')
+      var connection;
+      document.getElementById("btn").addEventListener("click", () => {
+        var mysql = require("mysql");
+
+         connection = mysql.createConnection({
+          host:"localhost",
+          user:"root",
+          password:null,
+          database:"stockdata"
+        });
+
+        connection.connect((err) =>{
+          if(err){
+            return console.log(err.stack);
+          }
+
+          console.log("Connection successful");
+        });
+
+        // Here queries with the database will be executed..
+
+
+
+      },false);
+
+      document.getElementById("add").addEventListener("click",()=>{
+        $queryString = "INSERT INTO stocksdetail (symbol, company_name) VALUES ('BLK', 'Blackrock')";
+
+        connection.query($queryString, (err,results)=>{
+          if (err) throw err;
+          
+          
+         console.log("1 record inserted");
+        });
+      },false);
+
+      document.getElementById("del").addEventListener("click",()=>{
+        $queryString = "DELETE FROM stocksdetail WHERE symbol = 'BLK'";
+        
+
+        connection.query($queryString, (err,results)=>{
+          if (err) throw err;
+          
+          
+         console.log("All record deleted");
+        });
+      },false);
+
+
+
+
+    </script>
+  </body>
+</html>
